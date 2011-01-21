@@ -1,5 +1,5 @@
     //// Ajax Helper functions //////
-    
+
     // Generic ajax helper functions. Could probably be cut down if the only use case turns out
     // to be for returning the source of the current page (i.e. remove type tests from ajaxData etc)
     function ajax( options )
@@ -13,16 +13,16 @@
             onSuccess   : options.onSuccess     || function(){},
             data        : options.data          || ''
         }
-    
+
         var r    = new XMLHttpRequest(),
             done = false;
 
         r.open(options.type, options.url, true);
-    
+
         setTimeout(function(){
             done = true;
         }, options.timeout);
-    
+
         r.onreadystatechange = function()
         {
             if ( r.readyState == 4 && ! done )
@@ -35,13 +35,13 @@
                 {
                     options.onError();
                 }
-            
+
                 options.onComplete();
-            
+
                 r = null;
             }
         }
-    
+
         r.send();
     }
 
@@ -50,7 +50,7 @@
         try {
             return ! r.status && location.protocol == "file:" ||
                 ( r.status >= 200 && r.status < 300 ) ||
-                r.status == 304 || 
+                r.status == 304 ||
                 navigator.userAgent.indexOf("Safari") >= 0 && typeof r.status == 'undefined';
                 // could take out safari check here but better to keep it cross browser I think.
         } catch(e) {}
@@ -61,7 +61,7 @@
     {
         var ct = r.getResponseHeader('content-type'),
             data = ! type && ct && ct.indexOf('xml') >= 0;
-    
+
         data = type == 'xml' || data ? r.responseXML : r.responseText;
         if ( type == 'script' ) eval.call(window, data);
         return data;
@@ -120,7 +120,7 @@
 
     function hideURLBar()
     {
-    	setTimeout(function() {
-    		window.scrollTo(0, 1);
-    	}, 0);
+        setTimeout(function() {
+            window.scrollTo(0, 1);
+        }, 0);
     }

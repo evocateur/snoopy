@@ -10,10 +10,10 @@
     }
 
     snoopQuery.fn = snoopQuery.prototype = {
-    
+
         length : 0,
         selector : '',
-            
+
         init : function( selector )
         {
             var elem,
@@ -21,23 +21,23 @@
                 match;
 
             if ( ! selector ) return this;
-        
+
             if ( selector.nodeType )
             {
                 this[0] = selector;
                 this.length = 1;
                 return this;
             }
-        
+
             if ( selector === window )
             {
                this[0] = selector;
                this.length = 1;
                return this;
             }
-        
+
             match = tagExp.exec(selector);
-        
+
             if ( match )
             {
                 // deal with very basic element creation here
@@ -74,25 +74,25 @@
                 selector = document.querySelectorAll( selector );
                 return merge( this, selector );
             }
-                    
+
             if (selector.selector !== undefined)
             {
                 this.selector = selector.selector;
                 this.context = selector.context;
             }
-                    
+
             return merge( selector, this );
         },
-    
-        // internal iterator 
+
+        // internal iterator
         each : function( callback )
         {
             var i = 0,
                 length = this.length;
-        
-            for ( var value = this[0]; i < length && callback.call( value, i, value ) !== false; value = this[++i] ) {}  
+
+            for ( var value = this[0]; i < length && callback.call( value, i, value ) !== false; value = this[++i] ) {}
         },
-    
+
         // very simple event binding function
         bind : function( event, callback )
         {
@@ -120,11 +120,11 @@
             });
             return this;
         },
-    
+
         removeClass : function( value )
         {
             var cn = (value || '').split(/\s/);
-        
+
             this.each(function(){
                 for ( var i = 0, l = cn.length; i < l;  i++ )
                 {
@@ -133,14 +133,14 @@
             });
             return this;
         },
-    
+
         hasClass : function( value )
         {
             return this[0] ? new RegExp('\\b'+value+'\\b').test(this[0].className) : false;
         },
-    
+
         // get/set attributes
-    
+
         attr : function( key, val )
         {
             if ( val !== undefined )
@@ -155,7 +155,7 @@
                 return this[0] ? this[0].getAttribute( key ) : null;
             }
         },
-    
+
         // VERY basic HTML function, no cleanup or anything yet.
         html : function( html )
         {
@@ -168,9 +168,9 @@
             }
             return this[0] ? this[0].innerHTML : null;
         },
-    
+
         // DOM insertion methods
-    
+
         append : function( elem )
         {
             if ( elem !== undefined )
@@ -179,7 +179,7 @@
                 this.each(function(){
                     this.appendChild(elem);
                 });
-                return this; 
+                return this;
             }
         }
 
@@ -192,7 +192,7 @@
 
     // add important styles inline
     (function() {
-    
+
         var styles_regexp = /([\w-]+)\s*:\s*([^;!]+)\s?(!\s?important?)?\s?[;|$]?/i;
 
         $.fn.style = function( prop, val, important )
@@ -202,9 +202,9 @@
                 // setting a value
                 important = important || false;
                 return this.each(function(){
-                
+
                     var dconst_rules = [];
-                
+
                     var self = $(this);
                     split(dconst_rules, self.attr('style')); // split up the rules
                     set(dconst_rules, prop, val, important);
@@ -216,12 +216,12 @@
                 // getting a value
                 var self = $(this[0]),
                     dconst_rules = [];
-                
+
                 split(dconst_rules, self.attr('style')); // split up the rules
                 return get(dconst_rules, prop);
             }
         }
-    
+
         function get( dconst_rules, prop )
         {
             for ( var rule, i = -1; rule = dconst_rules[++i]; )
@@ -234,7 +234,7 @@
         function set( dconst_rules, prop, val, important )
         {
             prop = trim(prop);
-        
+
             for ( var rule, i = -1; rule = dconst_rules[++i]; )
             {
                 if ( prop === rule.prop )
@@ -246,7 +246,7 @@
             }
             dconst_rules.push({ prop : prop, val : val, important : important });
         }
-    
+
         function combine( dconst_rules )
         {
             var rule_string = '';

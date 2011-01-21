@@ -3,7 +3,7 @@
 // License: http://unlicense.org/ (i.e. do what you want with it!)
 
 ;(function( window, document, undefined ){
-    
+
     var doc     = document,
         body    = doc.body,
         q_cache = {},
@@ -13,22 +13,22 @@
         })(),
         viewport = getViewportDimensions(),
         snoopy, modules, config, templates, snoopQuery;
-        
+
     config = {
         NAME            : 'Snoopy',
         VERSION         : '0.2',
         START_OFFSET    : { top : '0', left : '0' }
     };
-    
+
     snoopy = {
-        
+
         elem            : null,
         modules_html    : '',
         raw_source      : '',
         gen_source      : '',
         bind_stack      : [],
         position        : config.START_OFFSET,
-        
+
         init : function()
         {
             var self = this,
@@ -36,17 +36,17 @@
                 snpy;
 
             el.attr('id', 'snpy').addClass('cleanslate');
-            
+
             if ( isMobile ) el.addClass('MobileSafari');
-            
+
             el.style('top', this.position.top, true);
             el.style('left', this.position.left, true);
-            
+
             if ( viewport.width == 320 || viewport.width == 480 )
             {
                 body.scrollTop = 0;
-                hideURLBar();  
-            } 
+                hideURLBar();
+            }
 
             this.runTests();
             this.getRawSource();
@@ -58,24 +58,24 @@
                         version          : config.VERSION,
                         generated_source : this.gen_source
                     }));
-                    
+
             $(body).append(el);
-            
+
             this.setMaxDimensions();
             this.bindEvents();
         },
-                    
+
         runTests : function()
         {
             var results = Sniffer.run(),
                 output;
-            
+
             for ( group in results )
             {
                 var positive = 0;
-                    
+
                 output = '<h2>'+results[group].description+'</h2><ul class="tests">';
-                
+
                 for ( test in results[group].results )
                 {
                     var res = results[group].results[test];
@@ -88,7 +88,7 @@
                 this.modules_html += '<div class="module'+( positive ? '' : ' empty' )+' type_'+group+' output_'+results[group].return_type+'">'+output+'</div>';
             }
         },
-        
+
         getRawSource : function()
         {
             var self = this;
@@ -99,35 +99,35 @@
                      self.raw_source = floodlight(floodlight.decode(data));
                      $('#snpy_rawsource code.html').html(self.raw_source);
                 }
-            }); 
+            });
         },
-        
+
         getGeneratedSource : function()
         {
             this.gen_source = floodlight(floodlight.decode(doc.documentElement.innerHTML.toString()));
         },
-        
+
         bindEvents : function( bindStack )
         {
             var self = this,
                 el   = this.elem;
-            
+
             //////////// general snoopy events ////////////
-            
+
             $('#snpy .close').bind('click', function(){
                 el.addClass('closed');
                 return false;
             });
-            
+
             $(window).bind('resize', function(){
                 self.setMaxDimensions();
             });
-            
+
             // tabs & panels
-            
+
             var tabs = $('#snpy .menu li'),
                 panels = $('#snpy .panel');
-            
+
             tabs.each(function(){
                 $(this).bind('click', function(e){
                     var self = $(this);
@@ -136,14 +136,14 @@
                     self.addClass('active');
                     $($(e.target).attr('href')).addClass('active');
                     return false;
-                 }); 
-             });
-            
+                });
+            });
+
             //////////// module-specific events ////////////
-            
+
             for ( var d, i = -1; d = this.bind_stack[++i]; ) d();
         },
-        
+
         setMaxDimensions : function()
         {
             viewport = getViewportDimensions();
@@ -152,7 +152,7 @@
             if ( viewport.width != 320 && viewport.width != 480 )
             {
                 // TODO: really need to implement some proper browser capability and type detection instead of one-off tests like this
-                $('#snpy pre.source').style('max-height', (viewport.height - 180 - parseInt(config.START_OFFSET.top)*2)+'px', true);   
+                $('#snpy pre.source').style('max-height', (viewport.height - 180 - parseInt(config.START_OFFSET.top)*2)+'px', true);
             }
             else if (viewport.width == 320)
             {
@@ -165,9 +165,9 @@
         }
 
     };
-    
+
     templates = {
-        
+
         snoopy : "\
 <div class=\"head\">\
     <a class=\"close\" href=\"#\">close</a>\
@@ -194,19 +194,19 @@
 </div>"
 
     };
-    
+
     //////////// HELPER FUNCTIONS ////////////////
-    
+
     //= require "lib/sniffer"
-    
+
     //= require "lib/tim"
-    
+
     //= require "lib/floodlight"
-    
+
     //= require "snoopquery"
-    
+
     //= require "utils"
-    
+
     snoopy.init(); /* kick things off... */
-  
+
 })( window, document );
